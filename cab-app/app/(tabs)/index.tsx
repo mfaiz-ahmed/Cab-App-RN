@@ -3,6 +3,7 @@ import styles from "../Styles/style";
 import MapView, { Marker } from "react-native-maps";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
+import { router } from "expo-router";
 
 export default function HomeScreen() {
   const [location, setLocation] = useState<any>(null);
@@ -58,14 +59,14 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 50 }}>
+      <View style={{ marginTop: 50 , backgroundColor: 'white'}}>
         <TextInput
           placeholder="Enter Pickup Location"
           onChangeText={FindPickupLocation}
         />
       </View>
       {searchResult && !pickupLocation && (
-        <View>
+        <View style={{backgroundColor: 'white'}}>
           {searchResult.map((item: any) => {
             return (
               <TouchableOpacity
@@ -83,14 +84,21 @@ export default function HomeScreen() {
         </View>
       )}
       {pickupLocation && (
-        <View>
-          <Text>Pickup Location: {pickupLocation.name}</Text>
+        <View style={{backgroundColor: 'white'}}>
+          <Text key={pickupLocation.fsq_id}>Pickup Location: {pickupLocation.name} | {pickupLocation.location.formatted_address}</Text>
           <TouchableOpacity onPress={()=>setPickupLocation('')}>
-          <Text>x</Text>
+          <Text>X</Text>
           </TouchableOpacity>
         </View>
       )}
-        <Button title="Select Dropoff"/>
+        <Button onPress={()=>{
+          router.push({pathname: '/Dropoff' , params: {
+            name: pickupLocation.name ,
+            address : pickupLocation.formatted_address , 
+            latitude : pickupLocation.geocodes.main.latitude,
+            longitude : pickupLocation.geocodes.main.longitude,
+          }})
+        }} title="Select Dropoff"/>
       {location && (
         <MapView
           region={{
