@@ -1,4 +1,4 @@
-import { View, TextInput, Text } from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Button } from "react-native";
 import styles from "../Styles/style";
 import MapView, { Marker } from "react-native-maps";
 import { useState, useEffect } from "react";
@@ -54,12 +54,11 @@ export default function HomeScreen() {
       .catch((err) => console.error(err));
   };
 
-  console.log('search result' , searchResult);
-  
+  console.log("search result", searchResult);
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 50}}>
+      <View style={{ marginTop: 50 }}>
         <TextInput
           placeholder="Enter Pickup Location"
           onChangeText={FindPickupLocation}
@@ -69,14 +68,29 @@ export default function HomeScreen() {
         <View>
           {searchResult.map((item: any) => {
             return (
-              <View key={item.fsq_id} style={{ borderWidth: 1 , padding:2}}>
-                <Text>{item.name}</Text>
-                <Text>{item.location.formatted_address}</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setPickupLocation(item);
+                }}
+              >
+                <View key={item.fsq_id} style={{ borderWidth: 1, padding: 2 }}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.location.formatted_address}</Text>
+                </View>
+              </TouchableOpacity>
             );
           })}
         </View>
       )}
+      {pickupLocation && (
+        <View>
+          <Text>Pickup Location: {pickupLocation.name}</Text>
+          <TouchableOpacity onPress={()=>setPickupLocation('')}>
+          <Text>x</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+        <Button title="Select Dropoff"/>
       {location && (
         <MapView
           region={{
