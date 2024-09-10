@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "../Styles/style";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -11,7 +11,8 @@ export default function index() {
   console.log("params", params);
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
-
+  const [searchResult, setSearchResult] = useState<any>();
+  const [dropoffLocation, setDropoffLocation] = useState<any>();
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -32,14 +33,66 @@ export default function index() {
     text = JSON.stringify(location);
   }
 
+  const FindDropoffLocation = (text: any) => {
+    const { latitude, longitude } = location.coords;
+
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: "fsq3i5gncoRU6bMsLjf+YKvmGRcD8nnWjTWY55zhTFMM+FU=",
+      },
+    };
+
+    fetch(
+      `https://api.foursquare.com/v3/places/search?query=${text}&ll=${latitude},${longitude}&radius=100000`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => setSearchResult(response.results))
+      .catch((err) => console.error(err));
+  };
+
   return (
     <View style={styles.container}>
       <View style={{ backgroundColor: "white" }}>
-        <TextInput placeholder="Enter Pickup Location" />
+        <TextInput
+          onChangeText={FindDropoffLocation}
+          placeholder="Enter Pickup Location"
+        />
+        {searchResult && !dropoffLocation && (
+          <View style={{ backgroundColor: "white" }}>
+            {searchResult.map((item: any, index: number) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setDropoffLocation(item);
+                  }}
+                >
+                  <View key={index} style={{ borderWidth: 1, padding: 2 }}>
+                    <Text>{item.name}</Text>
+                    <Text>{item.location.formatted_address}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
       </View>
       {params && (
-        <View style={{ padding: 2 }}>
+          <View style={{ padding: 2 , backgroundColor : 'white' , borderTopWidth: 1}}>
           <Text>Pickup Location : {params.name}</Text>
+        </View>
+      )}
+      {dropoffLocation && (
+        <View style={{ backgroundColor: "white" }}>
+          <Text key={dropoffLocation.fsq_id}>
+            Dropoff Location: {dropoffLocation.name} |{" "}
+            {dropoffLocation.location.formatted_address}
+          </Text>
+          <TouchableOpacity onPress={() => setDropoffLocation("")}>
+            <Text>X</Text>
+          </TouchableOpacity>
         </View>
       )}
       {location && (

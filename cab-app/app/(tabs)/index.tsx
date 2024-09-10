@@ -55,50 +55,59 @@ export default function HomeScreen() {
       .catch((err) => console.error(err));
   };
 
-  console.log("search result", searchResult);
-
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 50 , backgroundColor: 'white'}}>
+      <View style={{ marginTop: 50, backgroundColor: "white" }}>
         <TextInput
           placeholder="Enter Pickup Location"
           onChangeText={FindPickupLocation}
         />
       </View>
-      {searchResult && !pickupLocation && (
-        <View style={{backgroundColor: 'white'}}>
-          {searchResult.map((item: any) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  setPickupLocation(item);
-                }}
-              >
-                <View key={item.fsq_id} style={{ borderWidth: 1, padding: 2 }}>
-                  <Text>{item.name}</Text>
-                  <Text>{item.location.formatted_address}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      )}
+      <View style={{ borderTopWidth: 1 }}>
+        {searchResult && !pickupLocation && (
+          <View style={{ backgroundColor: "white" }}>
+            {searchResult.map((item: any, index: number) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setPickupLocation(item);
+                  }}
+                >
+                  <View key={index} style={{ borderWidth: 1, padding: 2 }}>
+                    <Text>{item.name}</Text>
+                    <Text>{item.location.formatted_address}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+      </View>
       {pickupLocation && (
-        <View style={{backgroundColor: 'white'}}>
-          <Text key={pickupLocation.fsq_id}>Pickup Location: {pickupLocation.name} | {pickupLocation.location.formatted_address}</Text>
-          <TouchableOpacity onPress={()=>setPickupLocation('')}>
-          <Text>X</Text>
+        <View style={{ backgroundColor: "white" }}>
+          <Text key={pickupLocation.fsq_id}>
+            Pickup Location: {pickupLocation.name} |{" "}
+            {pickupLocation.location.formatted_address}
+          </Text>
+          <TouchableOpacity onPress={() => setPickupLocation("")}>
+            <Text>X</Text>
           </TouchableOpacity>
         </View>
       )}
-        <Button onPress={()=>{
-          router.push({pathname: '/Dropoff' , params: {
-            name: pickupLocation.name ,
-            address : pickupLocation.formatted_address , 
-            latitude : pickupLocation.geocodes.main.latitude,
-            longitude : pickupLocation.geocodes.main.longitude,
-          }})
-        }} title="Select Dropoff"/>
+      <Button
+        onPress={() => {
+          router.push({
+            pathname: "/Dropoff",
+            params: {
+              name: pickupLocation.name,
+              address: pickupLocation.formatted_address,
+              latitude: pickupLocation.geocodes.main.latitude,
+              longitude: pickupLocation.geocodes.main.longitude,
+            },
+          });
+        }}
+        title="Select Dropoff"
+      />
       {location && (
         <MapView
           region={{
