@@ -54,20 +54,24 @@ export default function HomeScreen() {
       .catch((err) => console.error(err));
   };
 
+  console.log('search result' , searchResult);
+  
+
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 50, backgroundColor: "white" }}>
+      <View style={{ marginTop: 50}}>
         <TextInput
           placeholder="Enter Pickup Location"
           onChangeText={FindPickupLocation}
         />
       </View>
       {searchResult && !pickupLocation && (
-        <View style={{ backgroundColor: "white" }}>
+        <View>
           {searchResult.map((item: any) => {
             return (
-              <View style={{ borderWidth: 10}}>
+              <View key={item.fsq_id} style={{ borderWidth: 1 , padding:2}}>
                 <Text>{item.name}</Text>
+                <Text>{item.location.formatted_address}</Text>
               </View>
             );
           })}
