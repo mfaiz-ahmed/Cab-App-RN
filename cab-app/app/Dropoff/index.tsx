@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Button } from "react-native";
 import styles from "../Styles/style";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -80,7 +80,9 @@ export default function index() {
         )}
       </View>
       {params && (
-          <View style={{ padding: 2 , backgroundColor : 'white' , borderTopWidth: 1}}>
+        <View
+          style={{ padding: 2, backgroundColor: "white", borderTopWidth: 1 }}
+        >
           <Text>Pickup Location : {params.name}</Text>
         </View>
       )}
@@ -95,6 +97,9 @@ export default function index() {
           </TouchableOpacity>
         </View>
       )}
+      <Button onPress={()=>{
+        router.push({pathname : '/CarSelection' , params:{}})
+      }} title="Select Car" />
       {location && (
         <MapView
           region={{
