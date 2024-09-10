@@ -1,4 +1,4 @@
-import { View, TextInput } from "react-native";
+import { View, TextInput, Text } from "react-native";
 import styles from "../Styles/style";
 import MapView, { Marker } from "react-native-maps";
 import { useState, useEffect } from "react";
@@ -7,6 +7,8 @@ import * as Location from "expo-location";
 export default function HomeScreen() {
   const [location, setLocation] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
+  const [searchResult, setSearchResult] = useState<any>();
+  const [pickupLocation, setPickupLocation] = useState<any>();
 
   useEffect(() => {
     (async () => {
@@ -32,9 +34,8 @@ export default function HomeScreen() {
     text = JSON.stringify(location);
   }
 
-  const FindPickupLocation = (text:any) => {
-
-    const {latitude , longitude} = location.coords
+  const FindPickupLocation = (text: any) => {
+    const { latitude, longitude } = location.coords;
 
     const options = {
       method: "GET",
@@ -49,15 +50,29 @@ export default function HomeScreen() {
       options
     )
       .then((response) => response.json())
-      .then((response) => console.log('response' , response))
+      .then((response) => setSearchResult(response.results))
       .catch((err) => console.error(err));
   };
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop: 50 , backgroundColor: 'white'}}>
-      <TextInput placeholder="Enter Pickup Location" onChangeText={FindPickupLocation} />
+      <View style={{ marginTop: 50, backgroundColor: "white" }}>
+        <TextInput
+          placeholder="Enter Pickup Location"
+          onChangeText={FindPickupLocation}
+        />
       </View>
+      {searchResult && !pickupLocation && (
+        <View style={{ backgroundColor: "white" }}>
+          {searchResult.map((item: any) => {
+            return (
+              <View style={{ borderWidth: 10}}>
+                <Text>{item.name}</Text>
+              </View>
+            );
+          })}
+        </View>
+      )}
       {location && (
         <MapView
           region={{
