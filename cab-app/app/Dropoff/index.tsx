@@ -98,7 +98,16 @@ export default function index() {
         </View>
       )}
       <Button onPress={()=>{
-        router.push({pathname : '/CarSelection' , params:{}})
+        router.push({pathname : '/CarSelection' , params:{
+          pickupName : params.name,
+          pickupAddress : params.address,
+          pickupLatitude : params.latitude,
+          pickupLongitude : params.longitude,
+          dropoffName : dropoffLocation.name,
+          dropoffAddress : dropoffLocation.location.formatted_address,
+          dropoffLatitude : dropoffLocation.geocodes.main.latitude,
+          dropoffLongitude : dropoffLocation.geocodes.main.longitude,
+        }})
       }} title="Select Car" />
       {location && (
         <MapView
