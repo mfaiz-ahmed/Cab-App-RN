@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 
 export default function index() {
+  const [fare, setFare] = useState<any>();
+  const [distance, setDistance] = useState<any>();
+
   const params = useLocalSearchParams();
   console.log("params", params);
   const {
@@ -35,6 +38,8 @@ export default function index() {
     );
     const fare = baseFare * distance;
     console.log("fare", fare);
+    setFare(Math.round(fare));
+    setDistance(distance);
   };
 
   function calcCrow(lat1: any, lon1: any, lat2: any, lon2: any) {
@@ -65,6 +70,12 @@ export default function index() {
       <Text style={{ backgroundColor: "white" }}>
         Dropoff Location : {dropoffName} |{dropoffAddress}
       </Text>
+      {distance && fare && (
+        <View>
+          <Text>Your Total Distance is : {distance}</Text>
+          <Text>Your Total Fare is : {fare}</Text>
+        </View>
+      )}
       <View style={{ margin: 1 }}>
         <Button
           onPress={() => {
