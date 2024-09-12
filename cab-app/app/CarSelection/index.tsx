@@ -4,10 +4,14 @@ import MapView, { Marker } from "react-native-maps";
 import styles from "../Styles/style";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
+import { db } from "../Firebase/config";
+import { collection, addDoc } from 'firebase/firestore';
+
 
 export default function index() {
   const [fare, setFare] = useState<any>();
   const [distance, setDistance] = useState<any>();
+  const [vehicle, setVehicle] = useState<any>();
 
   const params = useLocalSearchParams();
   console.log("params", params);
@@ -39,7 +43,8 @@ export default function index() {
     const fare = baseFare * distance;
     console.log("fare", fare);
     setFare(Math.round(fare));
-    setDistance(distance);
+    setDistance(Math.round(distance));
+    setVehicle(vehicle);
   };
 
   function calcCrow(lat1: any, lon1: any, lat2: any, lon2: any) {
@@ -62,6 +67,32 @@ export default function index() {
     return (Value * Math.PI) / 180;
   }
 
+  const confirmCar = async ()=>{
+    if(!vehicle) return
+
+    try {
+      await addDoc(collection(db, 'carSelections'), {
+        pickupName: params.pickupName,
+        pickupLatitude: params.pickupLatitude,
+        pickupLongitude: params.pickupLongitude,
+        dropoffName: params.dropoffName,
+        dropoffLatitude: params.dropoffLatitude,
+        dropoffLongitude: params.dropoffLongitude,
+        distance: distance , // Store distance in kilometers
+        carType: vehicle,
+        fare,
+      });
+
+      // Navigate to confirmation or payment screen
+      // router.push('/payment'); // Uncomment this to navigate after selection
+      alert('Car selection saved successfully! Proceed to payment.');
+    } catch (error) {
+      console.error('Error saving car selection: ', error);
+    }
+
+  }
+
+
   return (
     <View style={{ backgroundColor: "white" }}>
       <Text style={{ backgroundColor: "white" }}>
@@ -72,11 +103,11 @@ export default function index() {
       </Text>
       {distance && fare && (
         <View>
-          <Text>Your Total Distance is : {distance}</Text>
-          <Text>Your Total Fare is : {fare}</Text>
+          <Text>Your overall distance traveled will be : {distance}</Text>
+          <Text>You will be charged a total fare of : {fare}</Text>
         </View>
       )}
-      <View style={{ margin: 1 }}>
+      <View style={{ padding: 1 }}>
         <Button
           onPress={() => {
             calculateFare("bike");
@@ -101,6 +132,7 @@ export default function index() {
           }}
           title="AC Car"
         />
+        <Button onPress={confirmCar} title="Confirm Ride" />
       </View>
     </View>
   );
