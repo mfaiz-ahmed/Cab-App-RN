@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, Text } from "react-native";
+import { Button, View, Text, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import styles from "../Styles/style";
 import { useEffect, useState } from "react";
@@ -81,13 +81,14 @@ export default function index() {
         distance: distance , // Store distance in kilometers
         carType: vehicle,
         fare,
+        status:'pending'
       });
 
       // Navigate to confirmation or payment screen
       // router.push('/payment'); // Uncomment this to navigate after selection
-      alert('Car selection saved successfully! Proceed to payment.');
-    } catch (error) {
-      console.error('Error saving car selection: ', error);
+      Alert.alert('Requesting...');
+    } catch (e:any) {
+      Alert.alert(e.message)
     }
 
   }
