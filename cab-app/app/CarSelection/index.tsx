@@ -1,12 +1,10 @@
 import React from "react";
 import { Button, View, Text, Alert } from "react-native";
-import MapView, { Marker } from "react-native-maps";
 import styles from "../Styles/style";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { db } from "../Firebase/config";
-import { collection, addDoc } from 'firebase/firestore';
-
+import { collection, addDoc } from "firebase/firestore";
 
 export default function index() {
   const [fare, setFare] = useState<any>();
@@ -67,32 +65,30 @@ export default function index() {
     return (Value * Math.PI) / 180;
   }
 
-  const confirmCar = async ()=>{
-    if(!vehicle) return
+  const confirmCar = async () => {
+    if (!vehicle) return;
 
     try {
-      await addDoc(collection(db, 'carSelections'), {
+      await addDoc(collection(db, "carSelections"), {
         pickupName: params.pickupName,
         pickupLatitude: params.pickupLatitude,
         pickupLongitude: params.pickupLongitude,
         dropoffName: params.dropoffName,
         dropoffLatitude: params.dropoffLatitude,
         dropoffLongitude: params.dropoffLongitude,
-        distance: distance , // Store distance in kilometers
+        distance: distance, // Store distance in kilometers
         carType: vehicle,
         fare,
-        status:'pending'
+        status: "pending",
       });
 
       // Navigate to confirmation or payment screen
       // router.push('/payment'); // Uncomment this to navigate after selection
-      Alert.alert('Requesting...');
-    } catch (e:any) {
-      Alert.alert(e.message)
+      Alert.alert("Requesting...");
+    } catch (e: any) {
+      Alert.alert(e.message);
     }
-
-  }
-
+  };
 
   return (
     <View style={{ backgroundColor: "white" }}>

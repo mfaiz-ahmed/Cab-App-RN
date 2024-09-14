@@ -57,8 +57,9 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 50, backgroundColor: "white" }}>
+      <View style={{ backgroundColor: "white" }}>
         <TextInput
+          style={styles.input}
           placeholder="Enter Pickup Location"
           onChangeText={FindPickupLocation}
         />
@@ -73,9 +74,13 @@ export default function HomeScreen() {
                     setPickupLocation(item);
                   }}
                 >
-                  <View key={index} style={{ borderWidth: 1, padding: 2 }}>
-                    <Text>{item.name}</Text>
-                    <Text>{item.location.formatted_address}</Text>
+                  <View key={index} style={styles.list}>
+                    <Text style={{ fontSize: 18, fontWeight: 600 }}>
+                      {item.name}
+                    </Text>
+                    <Text style={{ fontSize: 18 }}>
+                      {item.location.formatted_address}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -84,17 +89,17 @@ export default function HomeScreen() {
         )}
       </View>
       {pickupLocation && (
-        <View style={{ backgroundColor: "white" }}>
+        <View style={styles.locationText}>
           <Text key={pickupLocation.fsq_id}>
-            Pickup Location: {pickupLocation.name} |{" "}
-            {pickupLocation.location.formatted_address}
+            Pickup Location: {pickupLocation.name} | {pickupLocation.location.formatted_address}
           </Text>
-          <TouchableOpacity onPress={() => setPickupLocation("")}>
-            <Text>X</Text>
-          </TouchableOpacity>
+          <View>
+          <Button color={'#52b788'} onPress={() => setPickupLocation("")} title="Clear" />
+          </View>
         </View>
       )}
-      <Button
+      <View style={styles.button}>
+      <Button color={'#52b788'}
         onPress={() => {
           router.push({
             pathname: "/Dropoff",
@@ -107,7 +112,8 @@ export default function HomeScreen() {
           });
         }}
         title="Select Dropoff"
-      />
+        />
+        </View>
       {location && (
         <MapView
           region={{
@@ -123,6 +129,7 @@ export default function HomeScreen() {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             }}
+            pinColor="#52b788"
             title={"Your Location"}
             description={"You are here"}
           />
