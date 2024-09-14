@@ -55,8 +55,9 @@ export default function index() {
 
   return (
     <View style={styles.container}>
-      <View style={{ backgroundColor: "white" }}>
+      <View style={{ backgroundColor: "white", marginTop: -30 }}>
         <TextInput
+          style={styles.input}
           onChangeText={FindDropoffLocation}
           placeholder="Enter Pickup Location"
         />
@@ -69,9 +70,13 @@ export default function index() {
                     setDropoffLocation(item);
                   }}
                 >
-                  <View key={index} style={{ borderWidth: 1, padding: 2 }}>
-                    <Text>{item.name}</Text>
-                    <Text>{item.location.formatted_address}</Text>
+                  <View key={index} style={styles.list}>
+                    <Text style={{ fontSize: 18, fontWeight: 600 }}>
+                      {item.name}{" "}
+                    </Text>
+                    <Text style={{ fontSize: 18 }}>
+                      {item.location.formatted_address}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -80,35 +85,59 @@ export default function index() {
         )}
       </View>
       {params && (
-        <View
-          style={{ padding: 2, backgroundColor: "white", borderTopWidth: 1 }}
-        >
-          <Text>Pickup Location : {params.name}</Text>
+        <View style={{ backgroundColor: "white" }}>
+          <Text
+            style={{
+              fontSize: 18,
+              padding: 4,
+            }}
+          >
+            Pickup Location : {params.name} | {params.address}
+          </Text>
         </View>
       )}
       {dropoffLocation && (
-        <View style={{ backgroundColor: "white" }}>
-          <Text key={dropoffLocation.fsq_id}>
+        <View style={styles.locationText}>
+          <Text
+            style={{
+              fontSize: 18,
+              padding: 4,
+            }}
+            key={dropoffLocation.fsq_id}
+          >
             Dropoff Location: {dropoffLocation.name} |{" "}
             {dropoffLocation.location.formatted_address}
           </Text>
-          <TouchableOpacity onPress={() => setDropoffLocation("")}>
-            <Text>X</Text>
-          </TouchableOpacity>
+          <View>
+          <Button
+            color={"#52b788"}
+            onPress={() => setDropoffLocation("")}
+            title="clear"
+            />
+            </View>
         </View>
       )}
-      <Button onPress={()=>{
-        router.push({pathname : '/CarSelection' , params:{
-          pickupName : params.name,
-          pickupAddress : params.address,
-          pickupLatitude : params.latitude,
-          pickupLongitude : params.longitude,
-          dropoffName : dropoffLocation.name,
-          dropoffAddress : dropoffLocation.location.formatted_address,
-          dropoffLatitude : dropoffLocation.geocodes.main.latitude,
-          dropoffLongitude : dropoffLocation.geocodes.main.longitude,
-        }})
-      }} title="Select Car" />
+      <View style={styles.button}>
+        <Button
+          color={"#52b788"}
+          onPress={() => {
+            router.push({
+              pathname: "/CarSelection",
+              params: {
+                pickupName: params.name,
+                pickupAddress: params.address,
+                pickupLatitude: params.latitude,
+                pickupLongitude: params.longitude,
+                dropoffName: dropoffLocation.name,
+                dropoffAddress: dropoffLocation.location.formatted_address,
+                dropoffLatitude: dropoffLocation.geocodes.main.latitude,
+                dropoffLongitude: dropoffLocation.geocodes.main.longitude,
+              },
+            });
+          }}
+          title="Select Car"
+        />
+      </View>
       {location && (
         <MapView
           region={{

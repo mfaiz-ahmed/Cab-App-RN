@@ -64,7 +64,7 @@ export default function HomeScreen() {
           onChangeText={FindPickupLocation}
         />
       </View>
-      <View style={{ borderTopWidth: 1 }}>
+      <View>
         {searchResult && !pickupLocation && (
           <View style={{ backgroundColor: "white" }}>
             {searchResult.map((item: any, index: number) => {
@@ -90,30 +90,42 @@ export default function HomeScreen() {
       </View>
       {pickupLocation && (
         <View style={styles.locationText}>
-          <Text key={pickupLocation.fsq_id}>
-            Pickup Location: {pickupLocation.name} | {pickupLocation.location.formatted_address}
+          <Text
+            style={{
+              fontSize: 18,
+              padding: 4,
+            }}
+            key={pickupLocation.fsq_id}
+          >
+            Pickup Location: {pickupLocation.name} |{" "}
+            {pickupLocation.location.formatted_address}
           </Text>
           <View>
-          <Button color={'#52b788'} onPress={() => setPickupLocation("")} title="Clear" />
+            <Button
+              color={"#52b788"}
+              onPress={() => setPickupLocation("")}
+              title="Clear"
+            />
           </View>
         </View>
       )}
       <View style={styles.button}>
-      <Button color={'#52b788'}
-        onPress={() => {
-          router.push({
-            pathname: "/Dropoff",
-            params: {
-              name: pickupLocation.name,
-              address: pickupLocation.formatted_address,
-              latitude: pickupLocation.geocodes.main.latitude,
-              longitude: pickupLocation.geocodes.main.longitude,
-            },
-          });
-        }}
-        title="Select Dropoff"
+        <Button
+          color={"#52b788"}
+          onPress={() => {
+            router.push({
+              pathname: "/Dropoff",
+              params: {
+                name: pickupLocation.name,
+                address: pickupLocation.location.formatted_address,
+                latitude: pickupLocation.geocodes.main.latitude,
+                longitude: pickupLocation.geocodes.main.longitude,
+              },
+            });
+          }}
+          title="Select Dropoff"
         />
-        </View>
+      </View>
       {location && (
         <MapView
           region={{

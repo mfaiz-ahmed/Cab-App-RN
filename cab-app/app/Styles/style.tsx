@@ -21,26 +21,22 @@ const styles = StyleSheet.create({
   list: {
     padding: 5,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 15,
     margin: 3,
     overflow: "scroll",
   },
-  input: {
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 20,
-    fontSize: 20,
-    backgroundColor: "white",
-    marginTop: 30,
+    input: {
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 15,
+      fontSize: 20,
+      backgroundColor: "white",
+      marginTop: 30,
+    },
+  button: { position: "absolute", bottom: 0, zIndex: 100, width: "100%" },
+  locationText: {
+    backgroundColor:'white',
   },
-  button:{position: 'absolute',
-    bottom:0,
-    zIndex:100,
-    width:'100%', 
-  },
-  locationText:{
-    
-  }
 });
 
 export default styles;
